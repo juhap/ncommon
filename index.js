@@ -1,0 +1,1 @@
+module.exports.MongoStore = require('./lib/mongostore');
