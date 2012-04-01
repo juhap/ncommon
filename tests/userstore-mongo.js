@@ -1,4 +1,5 @@
 var UserStore = require("../lib/userstore-mongo");
+console.log(UserStore);
 var us = new UserStore({
 	hostname: "localhost",
 	port: 27017,
