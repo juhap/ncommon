@@ -66,3 +66,12 @@ exports["Check password verification with correct password"] = function(test) {
 		});		
 	});
 }
+
+exports["Check password verification with non existing email address"] = function(test) {
+	test.expect(2);
+	us.checkPassword("DoesNotExist@example.org", "passw0rd", function(error, result) {
+		test.ok(!error, "error detected: " + error);
+		test.ok(!result, "should fail");			
+		test.done();
+	});		
+}
