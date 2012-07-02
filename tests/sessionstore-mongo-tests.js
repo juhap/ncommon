@@ -15,7 +15,9 @@ exports.setUp = function(callback) {
 
 exports.tearDown = function(callback) {	
 	store.close(function() {
+		console.log("Closing connection");
 		callback();	
+		console.log("Closed");
 	});	
 }
 
@@ -53,4 +55,33 @@ exports["Verify random session is not valid"] = function(test) {
 		test.ok(!result, "Result is expected to be false");
 		test.done();
 	});	
+};
+
+exports["Create and consume password reset token"] = function(test) {
+	test.expect(5);
+	store.createPasswordResetToken("user1", function(error, token) {
+		test.ok(!error);
+		test.ok(token);
+		store.popPasswordResetToken(token, function(error, result) {
+			test.ok(!error);
+			test.ok(result);
+			test.ok(result == "user1", "UserId is: " + result);
+			test.done();
+		});
+	});
+};
+
+exports["Resume existing session"] = function(test) {
+	test.expect(5);
+	var userid = "userId555";
+	store.initSession(userid, function(error, originalSessionId) {
+		test.ok(!error, "Init session error: " + error);
+		test.ok(originalSessionId);
+		store.initOrResumeSession(userid, function(error, newSessionId) {
+			test.ok(!error, error);
+			test.ok(newSessionId);
+			test.ok(originalSessionId == newSessionId);
+			test.done();			
+		});
+	});
 };
