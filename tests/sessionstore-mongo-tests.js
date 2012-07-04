@@ -1,24 +1,33 @@
-var SessionStore = require("../lib/sessionstore-mongo");								   
+var SessionStore = require("../lib/sessionstore-mongo");
+var TokenStore = require("../lib/tokenstore-mongo");
+
 var store = new SessionStore({
 	hostname: "localhost",
 	port: 27017,
 	database: "flwtest"
 });
 
+
 exports.setUp = function(callback) {
 	store.connect(function() {
+		console.log("Setting up (clearing data)");
 		store.clearAll(function() {
-			callback();
+			console.log("Setup done");
+			callback();			
 		});
 	});	
 };
 
 exports.tearDown = function(callback) {	
+	console.log("Teardown called");
+	callback();
+	/*
 	store.close(function() {
 		console.log("Closing connection");
 		callback();	
 		console.log("Closed");
 	});	
+	*/
 }
 
 exports["Create and check session for validity"] = function(test) {	
@@ -58,19 +67,19 @@ exports["Verify random session is not valid"] = function(test) {
 };
 
 exports["Create and consume password reset token"] = function(test) {
-	test.expect(5);
+	test.expect(4);
 	store.createPasswordResetToken("user1", function(error, token) {
 		test.ok(!error);
 		test.ok(token);
 		store.popPasswordResetToken(token, function(error, result) {
 			test.ok(!error);
-			test.ok(result);
-			test.ok(result == "user1", "UserId is: " + result);
+			test.ok(result.userId == "user1", "UserId is: " + result.userId);
 			test.done();
 		});
 	});
 };
 
+/*
 exports["Resume existing session"] = function(test) {
 	test.expect(5);
 	var userid = "userId555";
@@ -85,3 +94,4 @@ exports["Resume existing session"] = function(test) {
 		});
 	});
 };
+*/
