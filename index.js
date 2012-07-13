@@ -4,3 +4,4 @@ module.exports.UserStore = require('./lib/userstore-mongo');
 module.exports.UserStoreCached = require('./lib/userstore-cached');
 module.exports.EmailSes = require('./lib/email-ses');
 module.exports.ntools = require('./lib/tools');
+module.exports.TokenStore = require('./lib/tokenstore-mongo');
